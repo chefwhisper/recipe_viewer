@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timer Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    h1 {
+      color: #333;
+    }
+    #test-results {
+      margin-top: 20px;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      background-color: #f9f9f9;
+    }
+    .success {
+      color: green;
+      font-weight: bold;
+    }
+    .error {
+      color: red;
+      font-weight: bold;
+    }
+    button {
+      padding: 10px 15px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .test-passed {
+      background-color: #e8f5e9;
+    }
+    .test-failed {
+      background-color: #ffebee;
+    }
+    #status-indicator {
+      font-size: 24px;
+      margin: 20px 0;
+      padding: 10px;
+      border-radius: 5px;
+      text-align: center;
+    }
+    .running {
+      background-color: #e3f2fd;
+      color: #0d47a1;
+    }
+    .passed {
+      background-color: #e8f5e9;
+      color: #1b5e20;
+    }
+    .failed {
+      background-color: #ffebee;
+      color: #b71c1c;
+    }
+  </style>
+</head>
+<body>
+  <h1>Timer Test</h1>
+  <p>This page tests the timer functionality to verify that the infinite recursion issue is fixed.</p>
+  
+  <div id="status-indicator" class="running">Running test...</div>
+  
+  <button id="run-test">Run Test Again</button>
+  
+  <div id="test-results">
+    <h2>Test Results</h2>
+    <div id="results-content">
+      <p>Test is running automatically...</p>
+    </div>
+  </div>
+  
+  <!-- Load required modules -->
+  <script src="js/modules/core/event-bus.js"></script>
+  <script src="js/modules/core/module-loader.js"></script>
+  <script src="js/modules/timer/index.js"></script>
+  <script src="js/modules/timer/timer-core.js"></script>
+  <script src="js/modules/timer/timer-ui.js"></script>
+  <script src="js/modules/timer/timer-command-interface.js"></script>
+  <script src="js/modules/utils/common.js"></script>
+  
+  <!-- Load the test script -->
+  <script src="js/timer-test.js"></script>
+  
+  <script>
+    // Function to update the test results
+    function updateTestResults() {
+      const results = document.getElementById('results-content');
+      const statusIndicator = document.getElementById('status-indicator');
+      const consoleOutput = document.createElement('pre');
+      consoleOutput.style.whiteSpace = 'pre-wrap';
+      consoleOutput.style.backgroundColor = '#f0f0f0';
+      consoleOutput.style.padding = '10px';
+      consoleOutput.style.borderRadius = '4px';
+      
+      // Get console output
+      const logs = [];
+      const originalConsoleLog = console.log;
+      const originalConsoleError = console.error;
+      
+      console.log = function() {
+        logs.push(['log', Array.from(arguments).join(' ')]);
+        originalConsoleLog.apply(console, arguments);
+      };
+      
+      console.error = function() {
+        logs.push(['error', Array.from(arguments).join(' ')]);
+        originalConsoleError.apply(console, arguments);
+      };
+      
+      // Wait for test to complete
+      setTimeout(() => {
+        // Restore console
+        console.log = originalConsoleLog;
+        console.error = originalConsoleError;
+        
+        // Format logs
+        logs.forEach(([type, message]) => {
+          const logLine = document.createElement('div');
+          logLine.textContent = message;
+          if (type === 'error') {
+            logLine.classList.add('error');
+          } else if (message.includes('TEST PASSED')) {
+            logLine.classList.add('success');
+          }
+          consoleOutput.appendChild(logLine);
+        });
+        
+        // Update results
+        results.innerHTML = '';
+        results.appendChild(consoleOutput);
+        
+        // Update status indicator
+        if (document.body.classList.contains('test-passed')) {
+          statusIndicator.textContent = '✅ TEST PASSED: No infinite recursion detected';
+          statusIndicator.className = 'passed';
+        } else if (document.body.classList.contains('test-failed')) {
+          statusIndicator.textContent = '❌ TEST FAILED: Infinite recursion may still be present';
+          statusIndicator.className = 'failed';
+        } else {
+          statusIndicator.textContent = '⚠️ TEST INCOMPLETE: Check console for details';
+          statusIndicator.className = 'running';
+        }
+      }, 3000);
+    }
+    
+    // Run the test automatically when the page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      // Clear console
+      console.clear();
+      
+      // Update results after a delay
+      setTimeout(updateTestResults, 100);
+    });
+    
+    // Add button click handler for running the test again
+    document.getElementById('run-test').addEventListener('click', function() {
+      const resultsContent = document.getElementById('results-content');
+      const statusIndicator = document.getElementById('status-indicator');
+      
+      resultsContent.innerHTML = '<p>Running test...</p>';
+      statusIndicator.textContent = 'Running test...';
+      statusIndicator.className = 'running';
+      
+      // Remove test result classes
+      document.body.classList.remove('test-passed', 'test-failed');
+      
+      // Clear console
+      console.clear();
+      
+      // Run the test
+      if (window.runTimerTest) {
+        window.runTimerTest();
+      } else {
+        console.error('Test function not available');
+      }
+      
+      // Update results after a delay
+      setTimeout(updateTestResults, 100);
+    });
+  </script>
+</body>
+</html> 

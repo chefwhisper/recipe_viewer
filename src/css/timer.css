@@ -1,0 +1,88 @@
+.timer-button-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  margin-bottom: 8px;
+}
+
+.timer-button {
+  margin-right: 5px;
+  padding: 6px 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: #f0f0f0;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.timer-button:hover {
+  background-color: #e0e0e0;
+}
+
+.timer-button.start-button {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.timer-button.start-button:hover {
+  background-color: #45a049;
+}
+
+.timer-button.pause-button {
+  background-color: #ff9800;
+  color: white;
+}
+
+.timer-button.pause-button:hover {
+  background-color: #e68a00;
+}
+
+.timer-button.delete-button {
+  background-color: #f44336;
+  color: white;
+}
+
+.timer-button.delete-button:hover {
+  background-color: #d32f2f;
+}
+
+.inline-time-display {
+  font-size: 18px;
+  font-weight: bold;
+  margin-left: 10px;
+  background-color: #f5f5f5;
+  padding: 6px 12px;
+  border-radius: 4px;
+  min-width: 70px;
+  text-align: center;
+}
+
+.timer-progress-container {
+  width: 100%;
+  height: 8px;
+  background-color: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.timer-progress-bar {
+  height: 100%;
+  background-color: #4CAF50;
+  width: 0%;
+  transition: width 1s linear;
+}
+
+.timer-controls {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 16px;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  width: 100%;
+} 

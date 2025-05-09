@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Details</title>
+    <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Prata&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles/main.css">
+</head>
+<body>
+    <div class="container recipe-summary">
+        <a href="/" class="back-button">&larr; Back to All Recipes</a>
+        
+        <div id="error-container" class="error-message"></div>
+
+        <h1 id="recipe-title" class="recipe-title"></h1>
+
+        <div class="recipe-main-content">
+            <div class="recipe-container">
+                <div class="intro-layout">
+                    <div class="intro-image-container">
+                        <img id="recipe-image" alt="Recipe Image" class="recipe-image">
+                    </div>
+                    
+                    <div class="recipe-meta">
+                        <div class="meta-item">
+                            <span class="meta-label">Yields:</span>
+                            <span id="recipe-yields" class="meta-value"></span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Total Time:</span>
+                            <span id="recipe-time" class="meta-value"></span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Prep Time:</span>
+                            <span id="recipe-prep-time" class="meta-value"></span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Active Time:</span>
+                            <span id="recipe-active-time" class="meta-value"></span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Hands-off Time:</span>
+                            <span id="recipe-hands-off-time" class="meta-value"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="recipe-actions">
+                    <button id="start-cooking" class="primary-button">Start Cooking</button>
+                    <button id="shopping-list" class="secondary-button">View Shopping List</button>
+                </div>
+            </div>
+
+            <div class="ingredients-section">
+                <h2>Ingredients</h2>
+                <ul id="ingredients-list" class="ingredients-list"></ul>
+            </div>
+        </div>
+    </div>
+    <!-- Load the recipe summary JavaScript bundle -->
+    <script src="/recipe-summary.bundle.js"></script>
+</body>
+</html> 

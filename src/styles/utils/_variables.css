@@ -1,0 +1,51 @@
+:root {
+    /* Colors */
+    --color-primary: #9d4700;  /* Brown color for main title and text */
+    --color-secondary: #4ecdc4;
+    --color-background: #faf7f2;  /* Light brown background */
+    --color-text: #333333;
+    --color-text-light: #666666;
+    --color-border: #e0d5c1;  /* Light brown border color */
+    --color-white: #fff;
+    --color-success: #2c7a51;
+    
+    /* Component Colors */
+    --color-card-shadow: rgba(0, 0, 0, 0.1);
+    --color-card-shadow-hover: rgba(0, 0, 0, 0.15);
+    --color-timer-border: #e0d5c1;
+    --color-timer-background: #f8f4ec;
+    --color-banner-background: #faf7f2;  /* Light brown for minute/difficulty banners */
+    
+    /* Spacing */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    --spacing-xxl: 40px;
+    
+    /* Border Radius */
+    --border-radius-sm: 4px;
+    --border-radius-md: 8px;
+    --border-radius-lg: 12px;
+    
+    /* Typography */
+    --font-family-primary: 'Prata', serif;
+    --font-size-xs: 0.75rem;
+    --font-size-sm: 0.875rem;
+    --font-size-md: 1rem;
+    --font-size-base: 1rem;
+    --font-size-lg: 1.25rem;
+    --font-size-xl: 1.5rem;
+    --font-size-xxl: 2rem;
+    --font-size-title: 2.5rem;
+    
+    /* Transitions */
+    --transition-fast: 0.2s;
+    --transition-base: 0.3s;
+
+    /* Box shadows */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+} 

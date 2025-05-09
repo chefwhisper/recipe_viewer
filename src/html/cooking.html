@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cooking Mode</title>
+    <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Prata&display=swap" rel="stylesheet">
+</head>
+<body class="cooking-mode">
+    <div class="page-container">
+        <a href="#" class="back-button" id="exit-cooking">&larr; Back to All Recipes</a>
+
+        <div class="main-content">
+            <h1 id="recipe-title" class="recipe-title"></h1>
+            
+            <!-- Progress Indicator -->
+            <div class="cooking-progress">
+                <div class="progress-bar">
+                    <div class="progress" id="progress-indicator"></div>
+                </div>
+                <div class="phase-indicators">
+                    <button class="phase-indicator" data-phase="preparation">
+                        Preparation
+                    </button>
+                    <button class="phase-indicator" data-phase="cooking">
+                        Cooking
+                    </button>
+                </div>
+            </div>
+
+            <!-- Current Step Display -->
+            <div class="step-container">
+                <div class="step-header">
+                    <h2 id="step-title">Preparation Step 1</h2>
+                    <div class="step-progress">
+                        <span id="step-number" class="step-number">Step 1 of 4</span>
+                    </div>
+                </div>
+                
+                <div class="step-content">
+                    <div id="current-step" class="main-step"></div>
+                    <ul id="step-details" class="bullet-list"></ul>
+                </div>
+
+                <!-- Timer Section -->
+                <div class="multi-timer-container" id="timer-container">
+                    <!-- Timers will be added here dynamically -->
+                </div>
+
+                <!-- Step Navigation -->
+                <div class="step-navigation">
+                    <button id="prev-step" class="nav-button secondary-button">&larr; Previous Step</button>
+                    <button id="read-step" class="nav-button secondary-button">Read Aloud</button>
+                    <button id="next-step" class="nav-button primary-button">Next Step &rarr;</button>
+                </div>
+            </div>
+
+            <!-- Voice Commands UI -->
+            <div class="voice-controls-enhanced">
+                <button id="toggle-voice" class="voice-toggle primary-button">Enable Voice Commands</button>
+                <p id="voice-status" class="voice-status">Voice commands are disabled</p>
+                <button id="show-commands" class="commands-button">Show Voice Commands</button>
+                <div id="commands-panel" class="commands-panel"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/cooking.bundle.js"></script>
+</body>
+</html> 
