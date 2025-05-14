@@ -22,6 +22,9 @@ fs.writeFileSync(path.join(config.distFolder, '.nojekyll'), '');
 console.log('Deploying to GitHub Pages...');
 
 try {
+  // Save the dist folder
+  execSync('mv dist dist_temp', { stdio: 'inherit' });
+  
   // Checkout gh-pages branch
   execSync('git checkout gh-pages', { stdio: 'inherit' });
 
@@ -29,10 +32,10 @@ try {
   execSync('git rm -rf .', { stdio: 'inherit' });
 
   // Copy dist folder contents to root
-  execSync(`cp -r ../${config.distFolder}/* .`, { stdio: 'inherit' });
+  execSync('mv ../dist_temp/* .', { stdio: 'inherit' });
   
   // Copy .nojekyll file
-  execSync(`cp ../${config.distFolder}/.nojekyll .`, { stdio: 'inherit' });
+  execSync('mv ../dist_temp/.nojekyll .', { stdio: 'inherit' });
 
   // Add all files
   execSync('git add -A', { stdio: 'inherit' });
@@ -53,8 +56,12 @@ try {
   // Try to switch back to main branch
   try {
     execSync('git checkout main', { stdio: 'inherit' });
+    // If dist_temp still exists, restore it
+    if (fs.existsSync('dist_temp')) {
+      execSync('mv dist_temp dist', { stdio: 'inherit' });
+    }
   } catch (e) {
-    console.error('Failed to switch back to main branch.');
+    console.error('Failed to switch back to main branch or restore dist folder.');
   }
   process.exit(1);
 } 
