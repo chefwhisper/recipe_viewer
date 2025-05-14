@@ -8,11 +8,10 @@
 @import 'layout/_header.css';
 
 /* Components */
-@import 'components/_recipe-shared.css';
 @import 'components/_recipe-card.css';
 @import 'components/_recipe-viewer.css';
 @import 'components/_voice-controls.css';
 @import 'components/_shopping-list.css';
 @import 'components/_states.css';
 @import 'components/voice.css';
-@import 'components/cooking-mode.css';
+@import 'components/cooking-mode.css'; 

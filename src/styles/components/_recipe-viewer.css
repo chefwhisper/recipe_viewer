@@ -67,6 +67,11 @@
     height: 100%;
     object-fit: cover;
     object-position: center;
+    transition: transform var(--transition-base);
+}
+
+.recipe-image:hover {
+    transform: scale(1.02);
 }
 
 /* Recipe Metadata */
@@ -125,6 +130,31 @@
     font-family: var(--font-family-primary);
 }
 
+/* Ingredients List */
+.ingredients-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    columns: 2;
+    column-gap: var(--spacing-xxl);
+}
+
+.ingredients-list li {
+    margin-bottom: var(--spacing-sm);
+    break-inside: avoid;
+    padding-left: var(--spacing-md);
+    position: relative;
+    line-height: 1.4;
+    color: var(--color-text);
+}
+
+.ingredients-list li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: var(--color-primary);
+}
+
 /* Responsive styles */
 @media (max-width: 768px) {
     .recipe-container {
@@ -170,6 +200,10 @@
     .secondary-button {
         width: 100%;
         text-align: center;
+    }
+    
+    .ingredients-list {
+        columns: 1;
     }
 }
 
