@@ -10,6 +10,8 @@
     "clean-ports": "node scripts/clean-ports.js",
     "dev:clean": "npm run clean-ports && npm run dev",
     "build": "webpack --mode production",
+    "deploy": "node scripts/deploy-gh-pages.js",
+    "predeploy": "npm run build",
     "test": "jest",
     "lint": "eslint src/**/*.js"
   },
