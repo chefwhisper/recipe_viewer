@@ -31,14 +31,46 @@ const config = ASSET_CONFIG[ENV];
 // Log the configuration for debugging
 console.log('Recipe Data configuration:', config);
 
+// Map of recipe IDs to their correct filenames (without extension)
+// This handles the inconsistency in naming patterns
+const recipeFileMap = {
+    // Recipes that don't have "recipe-" prefix in their ID but need it in the filename
+    'fiesta-chili': 'fiesta-chili',
+    'chicken-turmeric-soup': 'chicken-turmeric-soup',
+    'cozy-chicken-chili': 'cozy-chicken-chili',
+    'beef-veggie-stew': 'beef-veggie-stew',
+    'oven-baked-sausage-cheese-pasta': 'oven-baked-sausage-cheese-pasta',
+    'caramelized-eggplant-pasta': 'caramelized-eggplant-pasta',
+    'one-pan-chicken-bites-with-potatoes': 'one-pan-chicken-bites-with-potatoes',
+    'one-pot-coconut-chicken-and-rice': 'one-pot-coconut-chicken-and-rice',
+    
+    // Recipes that already have "recipe-" prefix in both ID and filename
+    'recipe-fusion-garlic-steak-bites-with-miso-butter-broccoli': 'recipe-fusion-garlic-steak-bites-with-miso-butter-broccoli',
+    'recipe-fusion-miso-caramel-pork-chops-with-apples-and-garlic-mashed-potatoes': 'recipe-fusion-miso-caramel-pork-chops-with-apples-and-garlic-mashed-potatoes',
+    'recipe-fusion-pan-seared-salmon-with-tomato-pop-couscous': 'recipe-fusion-pan-seared-salmon-with-tomato-pop-couscous',
+    'recipe-fusion-rib-eye-steaks-with-potatoes-au-gratin': 'recipe-fusion-rib-eye-steaks-with-potatoes-au-gratin'
+};
+
 /**
- * Ensure recipe ID has the recipe- prefix
- * @param {string} recipeId - The ID to normalize
- * @returns {string} The normalized ID
+ * Get the correct filename for a recipe ID
+ * @param {string} recipeId - The ID of the recipe
+ * @returns {string} The correct filename (without extension)
  */
-function normalizeRecipeId(recipeId) {
+function getRecipeFilename(recipeId) {
     if (!recipeId) return recipeId;
-    return recipeId.startsWith('recipe-') ? recipeId : `recipe-${recipeId}`;
+    
+    // If we have a mapping for this ID, use it
+    if (recipeFileMap[recipeId]) {
+        return recipeFileMap[recipeId];
+    }
+    
+    // For IDs that start with 'recipe-', use as is
+    if (recipeId.startsWith('recipe-')) {
+        return recipeId;
+    }
+    
+    // Default case: use the ID as is
+    return recipeId;
 }
 
 /**
@@ -52,10 +84,11 @@ export async function loadRecipeData(recipeId) {
             throw new Error('Recipe ID is required');
         }
         
-        const normalizedId = normalizeRecipeId(recipeId);
-        console.log(`Loading recipe with normalized ID: ${normalizedId}`);
+        // Get the correct filename for this recipe ID
+        const filename = getRecipeFilename(recipeId);
+        console.log(`Loading recipe with ID: ${recipeId}, using filename: ${filename}`);
         
-        const jsonPath = `${config.recipesPath}/${normalizedId}.json`;
+        const jsonPath = `${config.recipesPath}/${filename}.json`;
         console.log(`Fetching recipe from JSON file: ${jsonPath}`);
         
         const response = await fetch(jsonPath);
