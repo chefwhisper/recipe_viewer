@@ -1,0 +1,453 @@
+/* Cooking Mode Styles */
+
+/* Variables - scoped to cooking-mode */
+.cooking-mode {
+    --cooking-primary: #9D4700;
+    --cooking-secondary: #F5E6DA;
+    --cooking-text: #2C1810;
+    --cooking-background: #FFF9F5;
+    --cooking-border: #E8D5C5;
+}
+
+/* Base Layout */
+.cooking-mode .page-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* Flash feedback for button actions */
+@keyframes flash-feedback {
+    0% { background-color: var(--cooking-secondary); }
+    50% { background-color: var(--cooking-primary); }
+    100% { background-color: var(--cooking-secondary); }
+}
+
+.cooking-mode .flash-feedback {
+    animation: flash-feedback 0.3s ease-in-out;
+}
+
+/* Back Button */
+.cooking-mode .back-button {
+    color: var(--cooking-primary);
+    text-decoration: none;
+    font-size: 1.1rem;
+    display: inline-block;
+    margin-bottom: 2rem;
+}
+
+/* Main Content Container */
+.cooking-mode .main-content {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Progress Bar */
+.cooking-mode .cooking-progress {
+    margin-bottom: 2rem;
+}
+
+.cooking-mode .progress-bar {
+    width: 100%;
+    height: 8px;
+    background-color: var(--cooking-secondary);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.cooking-mode .progress {
+    height: 100%;
+    background-color: var(--cooking-primary);
+    transition: width 0.3s ease;
+}
+
+.cooking-mode .phase-indicators {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 1rem;
+}
+
+.cooking-mode .phase-indicator {
+    background: var(--cooking-secondary);
+    border: none;
+    padding: 0.5rem 1.5rem;
+    font-size: 1.1rem;
+    color: var(--cooking-text);
+    cursor: pointer;
+    border-radius: 100px;
+    transition: all 0.3s ease;
+    margin-right: 10px;
+}
+
+.cooking-mode .phase-indicator:hover {
+    background-color: #e8e8e8;
+}
+
+.cooking-mode .phase-indicator.active {
+    background-color: var(--cooking-primary);
+    color: white;
+    font-weight: 500;
+}
+
+/* Step Container */
+.cooking-mode .step-container {
+    margin-bottom: 2rem;
+}
+
+.cooking-mode .step-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.cooking-mode #step-title {
+    font-family: 'Prata', serif;
+    color: var(--cooking-primary);
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.cooking-mode .step-number {
+    color: var(--cooking-text);
+    font-size: 1rem;
+}
+
+/* Step Content */
+.cooking-mode .step-content {
+    margin-bottom: 2rem;
+}
+
+.cooking-mode .main-step {
+    font-size: 1.2rem;
+    color: var(--cooking-text);
+    margin-bottom: 1rem;
+}
+
+.cooking-mode .bullet-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.cooking-mode .bullet-list li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--cooking-text);
+}
+
+.cooking-mode .bullet-list li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: var(--cooking-primary);
+}
+
+/* Timer Styles */
+.cooking-mode .multi-timer-container {
+    margin: 1.5rem 0;
+    padding: 0.5rem;
+    background-color: var(--cooking-background);
+    border-radius: 8px;
+    border: 1px solid var(--cooking-border);
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.cooking-mode .multi-timer-container h3 {
+    color: var(--cooking-primary);
+    margin: 0 0 0.75rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.cooking-mode .timer {
+    position: relative;
+    background-color: #fff;
+    border-radius: 6px;
+    margin-bottom: 0.4rem;
+    padding: 0.5rem 0.6rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    border-left: 4px solid var(--cooking-secondary);
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 100%;
+    transition: border-color 0.3s, background-color 0.3s;
+}
+
+/* Timer states */
+.cooking-mode .timer.running {
+    background-color: rgba(253, 245, 230, 0.5);
+    border-left-color: var(--cooking-primary);
+}
+
+.cooking-mode .timer.paused {
+    border-left-color: #FFC107;
+}
+
+.cooking-mode .timer.complete {
+    border-left-color: var(--cooking-primary);
+}
+
+/* Step-based timer states */
+.cooking-mode .timer.timer-current-step {
+    background-color: rgba(253, 245, 230, 0.5);
+    border-left-color: var(--cooking-primary);
+}
+
+.cooking-mode .timer.timer-previous-step {
+    opacity: 0.75;
+}
+
+.cooking-mode .timer.timer-future-step {
+    opacity: 0.9;
+}
+
+/* Timer name styles */
+.cooking-mode .timer-name-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 0.4rem;
+}
+
+.cooking-mode .timer-name {
+    font-size: 0.9rem;
+    color: var(--cooking-text);
+    font-weight: 500;
+    padding: 2px 4px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    flex: 1;
+}
+
+.cooking-mode .timer-name:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.cooking-mode .timer-name-input {
+    flex: 1;
+    padding: 3px 6px;
+    border: 1px solid var(--cooking-border);
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: inherit;
+    margin-right: 0.5rem;
+}
+
+/* Add styling for the right controls container */
+.cooking-mode .timer-right-controls {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: auto;
+}
+
+/* Style for the timer step indicator */
+.cooking-mode .timer-step-indicator {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.8rem;
+    color: #666;
+    padding: 2px 6px;
+    border-radius: 12px;
+    background-color: #f0f0f0;
+    white-space: nowrap;
+}
+
+.cooking-mode .timer-step-indicator.current {
+    color: var(--cooking-primary);
+    font-weight: 500;
+    background-color: rgba(157, 71, 0, 0.08);
+}
+
+.cooking-mode .current-dot {
+    color: var(--cooking-primary);
+    margin-left: 3px;
+    font-size: 0.9em;
+    position: relative;
+    top: 0.1em;
+}
+
+/* Button styles */
+.cooking-mode .timer-button {
+    background-color: var(--cooking-primary);
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+    margin-right: 0.3rem;
+}
+
+.cooking-mode .timer-button.primary-button {
+    background-color: var(--cooking-primary);
+}
+
+.cooking-mode .timer-button.secondary-button {
+    background-color: var(--cooking-secondary);
+    color: var(--cooking-text);
+}
+
+/* New button row with integrated time display */
+.cooking-mode .timer-button-row {
+    display: flex;
+    align-items: center;
+    position: relative;
+    margin-bottom: 0.4rem;
+    flex-wrap: nowrap;
+}
+
+.cooking-mode .inline-time-display {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--cooking-text);
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+}
+
+/* Only change the time display color when running/completed, not the whole box */
+.cooking-mode .timer.running .inline-time-display {
+    color: var(--cooking-primary);
+}
+
+.cooking-mode .timer.complete .inline-time-display {
+    color: var(--cooking-primary);
+}
+
+/* Progress bar */
+.cooking-mode .progress-container {
+    width: 100%;
+    height: 4px;
+    background-color: var(--cooking-secondary);
+    border-radius: 2px;
+    overflow: hidden;
+    margin: 0.2rem 0;
+}
+
+.cooking-mode .timer .progress-bar {
+    height: 100%;
+    background-color: var(--cooking-primary);
+    transition: width 1s linear;
+    width: 0;
+    border-radius: 0;
+    margin: 0;
+}
+
+/* Timer toast notification */
+.cooking-mode .timer-toast {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    background-color: var(--cooking-primary);
+    color: white;
+    padding: 0.75rem 1rem;
+    border-radius: 4px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    z-index: 1000;
+    transition: opacity 0.5s;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 80%;
+}
+
+/* Timer highlight animation */
+@keyframes timer-highlight-pulse {
+    0% { box-shadow: 0 0 0 0 rgba(157, 71, 0, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(157, 71, 0, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(157, 71, 0, 0); }
+}
+
+.cooking-mode .timer-highlight {
+    animation: timer-highlight-pulse 2s infinite;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .cooking-mode .page-container {
+        padding: 1rem;
+    }
+    
+    .cooking-mode .main-content {
+        padding: 1.5rem;
+    }
+    
+    .cooking-mode .step-navigation {
+        flex-direction: column;
+    }
+    
+    .cooking-mode .nav-button {
+        width: 100%;
+    }
+    
+    .cooking-mode .phase-indicators {
+        flex-wrap: wrap;
+    }
+    
+    .cooking-mode .main-step {
+        font-size: 1.1rem;
+    }
+    
+    .cooking-mode .timer-controls {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .cooking-mode .timer-button-container {
+        margin-top: 0.5rem;
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .cooking-mode .time-remaining {
+        font-size: 1.25rem;
+        margin-top: 0.5rem;
+    }
+    
+    .cooking-mode .timer-name {
+        font-size: 1rem;
+    }
+    
+    .cooking-mode .play-pause-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+}
+
+.bon-appetit {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 0.75rem 1.5rem;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: block;
+    margin: 2rem auto;
+}
+
+.bon-appetit:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+/* Make delete button more visible in the new position */
+.cooking-mode .delete-button {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.9rem;
+    margin: 0;
+}

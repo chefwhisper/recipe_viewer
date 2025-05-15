@@ -1,0 +1,253 @@
+/* Voice Recognition and Speech Synthesis Styles */
+
+/* Voice Command UI */
+.voice-command-ui {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Voice controls enhanced layout */
+.voice-controls-enhanced {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.voice-toggle {
+    padding: 8px 15px;
+    width: 100%;
+    max-width: 300px;
+}
+
+.voice-status {
+    margin: 10px 0;
+    padding: 8px;
+    font-size: 0.9rem;
+    border-radius: 4px;
+    text-align: center;
+    width: 100%;
+}
+
+.voice-status.active {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.voice-status.inactive {
+    background-color: #f5f5f5;
+    color: #757575;
+}
+
+.voice-status.error {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+/* Small commands button style */
+.commands-button {
+    font-size: 0.8rem;
+    padding: 5px 10px;
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    color: #555;
+    cursor: pointer;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    transition: background-color 0.2s;
+}
+
+.commands-button:hover {
+    background-color: #e3e3e3;
+}
+
+/* Voice Button */
+.voice-btn {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.voice-btn.primary {
+    background-color: #2196F3;
+    color: white;
+}
+
+.voice-btn.secondary {
+    background-color: #9E9E9E;
+    color: white;
+}
+
+.voice-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+.voice-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Voice Icon */
+.voice-icon {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+}
+
+/* Voice Animation */
+.voice-animation {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+}
+
+.voice-animation.listening {
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(33, 150, 243, 0.7);
+    }
+    
+    70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 10px rgba(33, 150, 243, 0);
+    }
+    
+    100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(33, 150, 243, 0);
+    }
+}
+
+/* Hide command suggestions since we're removing them */
+.command-suggestions {
+    display: none;
+}
+
+/* Commands Panel */
+.commands-panel {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #f8f5e6;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    padding: 0;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+    z-index: 1000;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.commands-panel.active {
+    transform: translateY(0);
+}
+
+.commands-panel-inner {
+    padding: 20px;
+    position: relative;
+}
+
+.commands-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.commands-panel h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    text-align: center;
+    color: var(--color-primary, #9d4700);
+    font-size: 1.2rem;
+}
+
+.close-commands-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 24px;
+    line-height: 24px;
+    width: 30px;
+    height: 30px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: #666;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.close-commands-btn:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    color: #333;
+}
+
+.command-category {
+    margin-bottom: 15px;
+    padding: 15px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e6dfc3;
+}
+
+.command-category h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: var(--color-primary, #9d4700);
+    border-bottom: 1px solid #e6dfc3;
+    padding-bottom: 5px;
+    font-size: 0.95rem;
+}
+
+.command-category ul {
+    list-style-type: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.command-category li {
+    padding: 4px 0;
+    font-size: 0.85rem;
+    color: #555;
+    margin-bottom: 4px;
+    border-left: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .commands-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .commands-panel {
+        max-height: 90vh;
+    }
+} 
