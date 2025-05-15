@@ -31,46 +31,61 @@ const config = ASSET_CONFIG[ENV];
 // Log the configuration for debugging
 console.log('Recipe Data configuration:', config);
 
-// Map of recipe IDs to their correct filenames (without extension)
-// This handles the inconsistency in naming patterns
-const recipeFileMap = {
-    // Recipes that don't have "recipe-" prefix in their ID but need it in the filename
-    'fiesta-chili': 'fiesta-chili',
-    'chicken-turmeric-soup': 'chicken-turmeric-soup',
-    'cozy-chicken-chili': 'cozy-chicken-chili',
-    'beef-veggie-stew': 'beef-veggie-stew',
-    'oven-baked-sausage-cheese-pasta': 'oven-baked-sausage-cheese-pasta',
-    'caramelized-eggplant-pasta': 'caramelized-eggplant-pasta',
-    'one-pan-chicken-bites-with-potatoes': 'one-pan-chicken-bites-with-potatoes',
-    'one-pot-coconut-chicken-and-rice': 'one-pot-coconut-chicken-and-rice',
+// Cache for recipe index data
+let recipeIndexCache = null;
+
+/**
+ * Get the recipe index data
+ * @returns {Promise<Object>} The recipe index data
+ */
+async function getRecipeIndex() {
+    // Return cached data if available
+    if (recipeIndexCache) {
+        return recipeIndexCache;
+    }
     
-    // Recipes that already have "recipe-" prefix in both ID and filename
-    'recipe-fusion-garlic-steak-bites-with-miso-butter-broccoli': 'recipe-fusion-garlic-steak-bites-with-miso-butter-broccoli',
-    'recipe-fusion-miso-caramel-pork-chops-with-apples-and-garlic-mashed-potatoes': 'recipe-fusion-miso-caramel-pork-chops-with-apples-and-garlic-mashed-potatoes',
-    'recipe-fusion-pan-seared-salmon-with-tomato-pop-couscous': 'recipe-fusion-pan-seared-salmon-with-tomato-pop-couscous',
-    'recipe-fusion-rib-eye-steaks-with-potatoes-au-gratin': 'recipe-fusion-rib-eye-steaks-with-potatoes-au-gratin'
-};
+    try {
+        const response = await fetch(`${config.recipesPath}/index.json`);
+        if (!response.ok) {
+            throw new Error(`Failed to load recipe index: ${response.status} ${response.statusText}`);
+        }
+        const data = await response.json();
+        recipeIndexCache = data; // Cache the data
+        return data;
+    } catch (error) {
+        console.error('Error loading recipe index:', error);
+        throw error;
+    }
+}
 
 /**
  * Get the correct filename for a recipe ID
  * @param {string} recipeId - The ID of the recipe
- * @returns {string} The correct filename (without extension)
+ * @returns {Promise<string>} The correct filename (without extension)
  */
-function getRecipeFilename(recipeId) {
+async function getRecipeFilename(recipeId) {
     if (!recipeId) return recipeId;
     
-    // If we have a mapping for this ID, use it
-    if (recipeFileMap[recipeId]) {
-        return recipeFileMap[recipeId];
-    }
-    
-    // For IDs that start with 'recipe-', use as is
-    if (recipeId.startsWith('recipe-')) {
+    try {
+        // Get the recipe index
+        const recipeIndex = await getRecipeIndex();
+        
+        // Find the recipe in the index
+        const recipe = recipeIndex.recipes.find(r => r.id === recipeId);
+        
+        if (recipe) {
+            // Recipe found in index, use its ID
+            return recipe.id;
+        }
+        
+        // If not found in index, use the ID as is
+        console.warn(`Recipe ID "${recipeId}" not found in index.json, using as is`);
+        return recipeId;
+    } catch (error) {
+        // If there's an error loading the index, fall back to using the ID as is
+        console.error('Error getting recipe filename:', error);
         return recipeId;
     }
-    
-    // Default case: use the ID as is
-    return recipeId;
 }
 
 /**
@@ -85,7 +100,7 @@ export async function loadRecipeData(recipeId) {
         }
         
         // Get the correct filename for this recipe ID
-        const filename = getRecipeFilename(recipeId);
+        const filename = await getRecipeFilename(recipeId);
         console.log(`Loading recipe with ID: ${recipeId}, using filename: ${filename}`);
         
         const jsonPath = `${config.recipesPath}/${filename}.json`;
@@ -135,12 +150,7 @@ export async function saveRecipeData(recipeId, recipeData) {
  */
 export async function listRecipes() {
     try {
-        const response = await fetch(`${config.recipesPath}/index.json`);
-        if (!response.ok) {
-            throw new Error(`Failed to load recipe list: ${response.status} ${response.statusText}`);
-        }
-        const data = await response.json();
-        return data; // Return data as is, without modifying paths
+        return await getRecipeIndex();
     } catch (error) {
         console.error('Error loading recipe list:', error);
         throw error;

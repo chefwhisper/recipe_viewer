@@ -50,8 +50,17 @@ class CookingMode {
             
             console.log('Starting cooking mode initialization');
             
-            // Get recipe ID
-            this.recipeId = new URLSearchParams(window.location.search).get('id');
+            // Get recipe ID from URL query parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            this.recipeId = urlParams.get('id');
+            
+            if (!this.recipeId) {
+                console.error('No recipe ID found in URL');
+                this.showError('No recipe ID provided');
+                return false;
+            }
+            
+            console.log('Recipe ID from URL:', this.recipeId);
             
             // Clean up any existing state
             this.cleanupExistingState();
@@ -943,7 +952,7 @@ class CookingMode {
 
             // Redirect to recipe summary if we have a recipe ID, otherwise to index
             if (this.recipeId) {
-                window.location.href = `/recipe/${this.recipeId}`;
+                window.location.href = `recipe-summary.html?id=${this.recipeId}`;
             } else {
                 window.location.href = '/';
             }
