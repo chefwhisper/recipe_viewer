@@ -42,19 +42,19 @@ module.exports = (env, argv) => {
     },
     plugins: [
       new HtmlWebpackPlugin({
-        template: path.resolve(__dirname, 'src/html/index.html'),
+        template: './src/html/index.html',
         filename: 'index.html',
         chunks: ['main'],
         publicPath: publicPath
       }),
       new HtmlWebpackPlugin({
-        template: path.resolve(__dirname, 'src/html/recipe-summary.html'),
+        template: './src/html/recipe-summary.html',
         filename: 'recipe-summary.html',
         chunks: ['recipe-summary'],
         publicPath: publicPath
       }),
       new HtmlWebpackPlugin({
-        template: path.resolve(__dirname, 'src/html/cooking.html'),
+        template: './src/html/cooking.html',
         filename: 'cooking.html',
         chunks: ['cooking'],
         publicPath: publicPath
