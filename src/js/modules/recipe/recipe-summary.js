@@ -6,7 +6,7 @@
 // Import styles
 import '../../../styles/main.css';
 
-import { loadRecipeData } from './recipe-data.js';
+import { loadRecipeData, listRecipes } from './recipe-data.js';
 import { initializeShoppingList, showShoppingList } from '../shopping/shopping-list.js';
 import { formatTime } from '../core/utils/utils.js';
 import eventBus from '../../core/events/event-bus.js';
@@ -14,43 +14,30 @@ import eventBus from '../../core/events/event-bus.js';
 // Configure asset paths based on environment
 const ASSET_CONFIG = {
     development: {
-        imagePath: '/assets'  // Since server.js serves 'src' as root
+        imagePath: '/assets/images'  // Updated to match server config
     },
     production: {
-        imagePath: '/assets'
+        imagePath: '/assets/images'  // Updated to match server config
     }
 };
 
-// Determine environment based on URL/hostname
-const isDevelopment = window.location.hostname === 'localhost' || 
-                     window.location.hostname === '127.0.0.1' ||
-                     window.location.hostname === '';
+// Check if we're in a browser environment
+const isBrowser = typeof window !== 'undefined';
+
+// Determine environment based on URL/hostname if in browser
+const isDevelopment = isBrowser ? 
+    (window.location.hostname === 'localhost' || 
+     window.location.hostname === '127.0.0.1' ||
+     window.location.hostname === '') :
+    true; // Default to development in Node.js environment
 
 const ENV = isDevelopment ? 'development' : 'production';
 const config = ASSET_CONFIG[ENV];
 
+// Simple function to get recipe ID from URL query parameter
 function getRecipeIdFromUrl() {
-    // First try to get the ID from URL query parameters (e.g., ?id=recipe-123)
     const urlParams = new URLSearchParams(window.location.search);
-    const idFromParams = urlParams.get('id');
-    
-    if (idFromParams) {
-        // Remove any existing 'recipe-' prefix to avoid duplication
-        const cleanId = idFromParams.replace('recipe-', '');
-        // Always return with 'recipe-' prefix
-        return `recipe-${cleanId}`;
-    }
-    
-    // If not in query params, try to extract from the path as a fallback (e.g., /recipe/123)
-    const pathParts = window.location.pathname.split('/');
-    const rawId = pathParts.length >= 3 ? pathParts[2] : null;
-    
-    if (!rawId) return null;
-    
-    // Remove any existing 'recipe-' prefix to avoid duplication
-    const cleanId = rawId.replace('recipe-', '');
-    // Always return with 'recipe-' prefix
-    return `recipe-${cleanId}`;
+    return urlParams.get('id');
 }
 
 class RecipeSummary {
@@ -169,8 +156,8 @@ class RecipeSummary {
         }
 
         this.elements.startCookingBtn.addEventListener('click', (event) => {
-            console.log('Start cooking button clicked, navigating to:', `/cooking/${this.recipeId}`);
-            window.location.href = `/cooking/${this.recipeId}`;
+            console.log('Start cooking button clicked, navigating to cooking mode with ID:', this.recipeId);
+            window.location.href = `cooking.html?id=${this.recipeId}`;
         });
 
         this.elements.shoppingListBtn.addEventListener('click', () => {
@@ -189,8 +176,22 @@ class RecipeSummary {
     async loadRecipe() {
         console.log('Loading recipe data for ID:', this.recipeId);
         try {
+            // First, load the recipe index to get the thumbnail
+            const recipeIndex = await listRecipes();
+            this.recipeIndex = recipeIndex;
+            
+            // Find the current recipe in the index
+            const recipeInfo = recipeIndex.recipes.find(recipe => recipe.id === this.recipeId);
+            
+            // Now load the full recipe data
             const recipe = await loadRecipeData(this.recipeId);
             console.log('Recipe data loaded:', recipe);
+            
+            // Add the thumbnail from the index if available
+            if (recipeInfo && recipeInfo.thumbnail) {
+                recipe.thumbnail = recipeInfo.thumbnail;
+            }
+            
             this.currentRecipe = recipe;
             this.displayRecipe(recipe);
         } catch (error) {
@@ -229,19 +230,19 @@ class RecipeSummary {
         if (this.elements.image) {
             // Pre-load placeholder image to ensure it's in cache
             const placeholderImg = new Image();
-            placeholderImg.src = `${config.imagePath}/images/placeholder.jpg`;
+            placeholderImg.src = `${config.imagePath}/placeholder.jpg`;
             
-            // Create the recipe image URL - ensure path includes /images/
-            const imageUrl = recipe.metadata?.imageUrl 
-                ? `${config.imagePath}/images/${recipe.metadata.imageUrl.replace(/^(images\/)?/, '')}`
-                : `${config.imagePath}/images/placeholder.jpg`;
+            // Use the thumbnail from the index.json if available
+            const imageUrl = recipe.thumbnail 
+                ? `${config.imagePath}/${recipe.thumbnail.replace(/^images\//, '')}`
+                : `${config.imagePath}/placeholder.jpg`;
                 
             console.log('Setting image URL to:', imageUrl);
             
             // Set up error handling before setting src
             this.elements.image.onerror = () => {
                 console.error('Image failed to load, falling back to placeholder');
-                this.elements.image.src = `${config.imagePath}/images/placeholder.jpg`;
+                this.elements.image.src = `${config.imagePath}/placeholder.jpg`;
                 // Only log an error once
                 this.elements.image.onerror = null;
             };

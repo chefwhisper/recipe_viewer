@@ -3,27 +3,30 @@
  * Handles loading and managing recipe data
  */
 
-// Configure API endpoints based on environment
-const API_CONFIG = {
+// Configure asset paths based on environment
+const ASSET_CONFIG = {
     development: {
-        baseUrl: '/api/recipes',
-        recipeEndpoint: (id) => `${id}`,
-        imagePath: '/assets'  // Base path for all assets
+        recipesPath: '/assets/recipes',
+        imagePath: '/assets/images'
     },
     production: {
-        baseUrl: '/api/recipes',
-        recipeEndpoint: (id) => `${id}`,
-        imagePath: '/assets'
+        recipesPath: '/assets/recipes',
+        imagePath: '/assets/images'
     }
 };
 
-// Determine environment based on URL/hostname
-const isDevelopment = window.location.hostname === 'localhost' || 
-                     window.location.hostname === '127.0.0.1' ||
-                     window.location.hostname === '';
+// Check if we're in a browser environment
+const isBrowser = typeof window !== 'undefined';
+
+// Determine environment based on URL/hostname if in browser
+const isDevelopment = isBrowser ? 
+    (window.location.hostname === 'localhost' || 
+     window.location.hostname === '127.0.0.1' ||
+     window.location.hostname === '') :
+    true; // Default to development in Node.js environment
 
 const ENV = isDevelopment ? 'development' : 'production';
-const config = API_CONFIG[ENV];
+const config = ASSET_CONFIG[ENV];
 
 // Log the configuration for debugging
 console.log('Recipe Data configuration:', config);
@@ -39,7 +42,7 @@ function normalizeRecipeId(recipeId) {
 }
 
 /**
- * Load recipe data from the API
+ * Load recipe data from local JSON file
  * @param {string} recipeId - The ID of the recipe to load
  * @returns {Promise<Object>} The recipe data
  */
@@ -52,11 +55,11 @@ export async function loadRecipeData(recipeId) {
         const normalizedId = normalizeRecipeId(recipeId);
         console.log(`Loading recipe with normalized ID: ${normalizedId}`);
         
-        const apiUrl = `${config.baseUrl}/${config.recipeEndpoint(normalizedId)}`;
-        console.log(`Fetching recipe from API URL: ${apiUrl}`);
+        const jsonPath = `${config.recipesPath}/${normalizedId}.json`;
+        console.log(`Fetching recipe from JSON file: ${jsonPath}`);
         
-        const response = await fetch(apiUrl);
-        console.log(`API response status: ${response.status}`);
+        const response = await fetch(jsonPath);
+        console.log(`JSON file response status: ${response.status}`);
         
         if (!response.ok) {
             throw new Error(`Failed to load recipe: ${response.status} ${response.statusText}`);
@@ -83,45 +86,23 @@ export async function loadRecipeData(recipeId) {
 }
 
 /**
- * Save recipe data to the API
+ * Save recipe data is not supported in this version
  * @param {string} recipeId - The ID of the recipe to save
  * @param {Object} recipeData - The recipe data to save
  * @returns {Promise<Object>} The saved recipe data
  */
 export async function saveRecipeData(recipeId, recipeData) {
-    if (ENV === 'development') {
-        console.warn('Saving recipes is not supported in development mode');
-        return recipeData;
-    }
-
-    try {
-        const normalizedId = normalizeRecipeId(recipeId);
-        const response = await fetch(`${config.baseUrl}/${config.recipeEndpoint(normalizedId)}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(recipeData),
-        });
-        
-        if (!response.ok) {
-            throw new Error(`Failed to save recipe: ${response.status} ${response.statusText}`);
-        }
-        
-        return await response.json();
-    } catch (error) {
-        console.error('Error saving recipe:', error);
-        throw error;
-    }
+    console.warn('Saving recipes is not supported in this version');
+    return recipeData;
 }
 
 /**
- * List all available recipes
+ * List all available recipes from the index.json file
  * @returns {Promise<Array>} Array of recipe metadata
  */
 export async function listRecipes() {
     try {
-        const response = await fetch('/api/recipes/index.json');
+        const response = await fetch(`${config.recipesPath}/index.json`);
         if (!response.ok) {
             throw new Error(`Failed to load recipe list: ${response.status} ${response.statusText}`);
         }

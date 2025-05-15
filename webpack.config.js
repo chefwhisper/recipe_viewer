@@ -96,6 +96,10 @@ module.exports = (env, argv) => {
           publicPath: '/assets'
         },
         {
+          directory: path.join(__dirname, 'src/assets/recipes'),
+          publicPath: '/assets/recipes'
+        },
+        {
           directory: path.join(__dirname, 'src/styles'),
           publicPath: '/styles'
         }
@@ -105,9 +109,6 @@ module.exports = (env, argv) => {
           { from: /^\/recipe\/.*/, to: '/recipe-summary.html' },
           { from: /^\/cooking\/.*/, to: '/cooking.html' }
         ]
-      },
-      proxy: {
-        '/api': 'http://localhost:3001'
       },
       hot: true,
       port: 3000,

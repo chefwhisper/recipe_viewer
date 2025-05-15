@@ -15,10 +15,15 @@ const ASSET_CONFIG = {
     }
 };
 
-// Determine environment based on URL/hostname
-const isDevelopment = window.location.hostname === 'localhost' || 
-                     window.location.hostname === '127.0.0.1' ||
-                     window.location.hostname === '';
+// Check if we're in a browser environment
+const isBrowser = typeof window !== 'undefined';
+
+// Determine environment based on URL/hostname if in browser
+const isDevelopment = isBrowser ? 
+    (window.location.hostname === 'localhost' || 
+     window.location.hostname === '127.0.0.1' ||
+     window.location.hostname === '') :
+    true; // Default to development in Node.js environment
 
 const ENV = isDevelopment ? 'development' : 'production';
 const config = ASSET_CONFIG[ENV];
@@ -27,6 +32,7 @@ export class RecipeList {
     constructor() {
         this.recipeGrid = document.getElementById('recipe-grid');
         this.listRecipesBtn = document.getElementById('list-recipes-btn');
+        this.recipeIndex = null; // Store the recipe index for reference
         this.initialize();
     }
 
@@ -53,6 +59,7 @@ export class RecipeList {
             
             // Use the listRecipes function from recipe-data.js
             const recipeIndex = await listRecipes();
+            this.recipeIndex = recipeIndex; // Store for reference
             this.displayRecipes(recipeIndex.recipes);
         } catch (error) {
             console.error('Error loading recipes:', error);
@@ -104,7 +111,7 @@ export class RecipeList {
             </div>
         `;
         
-        // Add click event to navigate to the recipe summary
+        // Add click event to navigate to the recipe summary using the exact ID from index.json
         card.addEventListener('click', () => {
             window.location.href = `recipe-summary.html?id=${recipe.id}`;
         });

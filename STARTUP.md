@@ -4,17 +4,24 @@
 
 1. Open your terminal and navigate to the project directory:
    ```bash
-   cd /Users/livia/Desktop/Recipe\ Viewer
+   cd /path/to/recipe-viewer
    ```
 
-2. Start both the frontend and API servers using the dev script:
+2. Start the webpack dev server (recommended):
+   ```bash
+   npm run start
+   ```
+
+   This will start the webpack dev server on http://localhost:3000, which is all you need to run the application.
+
+3. Alternative: Start both servers (not typically needed):
    ```bash
    npm run dev
    ```
 
-This will start:
-- The webpack dev server on http://localhost:3000 (frontend)
-- The API server on http://localhost:3001 (backend)
+   This will start:
+   - The webpack dev server on http://localhost:3000 (frontend)
+   - The static file server on http://localhost:3001 (optional)
 
 ## Accessing the Application
 
@@ -27,44 +34,60 @@ This will start:
 
 ## Important Notes
 
-### Image Serving
-The application serves images through a unified path:
-- All images are served from `/assets/images/*`
-- Image configuration is managed in:
-  - Frontend: `src/js/modules/recipe/recipe-list.js`
-  - Backend: `src/config/server.config.js`
+### Static File Serving
+The application serves static files directly through the webpack dev server:
+- Recipe data is loaded from JSON files in `src/assets/recipes/`
+- Images are served from `src/assets/images/`
+- No API endpoints are required
+
+### Image Configuration
+Image paths are configured in:
+- `src/js/modules/recipe/recipe-list.js`
+- `src/js/modules/recipe/recipe-summary.js`
 
 If you need to add new images:
 1. Place them in `src/assets/images/`
 2. They will be automatically available at `/assets/images/[filename]`
+3. Reference them in recipe JSON files as `"thumbnail": "images/[filename]"`
 
 ### Troubleshooting
 If you see missing images:
-1. Make sure both servers are running (`npm run dev`)
-2. Check that images exist in `src/assets/images/`
+1. Check that images exist in `src/assets/images/`
+2. Verify that image paths in recipe JSON files are correct
 3. Clear your browser cache
-4. Restart both servers using the commands in the "Stopping Servers" section
+4. Restart the server using the commands in the "Stopping Servers" section
+
+### Browser Environment Detection
+The application includes environment detection to handle both browser and server contexts:
+```javascript
+const isBrowser = typeof window !== 'undefined';
+```
+
+If you see "window is not defined" errors in the server logs, this is normal and can be ignored when using `npm run dev`.
 
 ## Stopping the Servers
 
 If you need to stop the servers at any time:
 ```bash
+# If using npm run start
+pkill -f "webpack"
+
+# If using npm run dev
 pkill -f "node server.js" && pkill -f "webpack"
 ```
 
 ## What's Running
 
-The `npm run dev` command starts:
-1. Frontend (Webpack Dev Server)
-   - Serves the web application
-   - Handles hot reloading
-   - Port: 3000
-   - Serves static assets through unified paths
+The `npm run start` command runs:
+- Webpack Dev Server
+  - Serves the web application
+  - Handles hot reloading
+  - Port: 3000
+  - Serves static assets (images, recipe JSON files, styles)
+  - Handles routing with history API fallback
 
-2. Backend (Express API Server)
-   - Serves recipe data
-   - Handles API requests
-   - Port: 3001
-   - Serves static assets through consistent configuration
-
-Note: The `npm run dev` command uses `concurrently` to run both servers at once, so you only need this one command to start everything. 
+The optional `npm run dev` command additionally runs:
+- Express Static File Server
+  - Serves static assets
+  - Port: 3001
+  - Not required for normal development 

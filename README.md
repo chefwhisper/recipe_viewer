@@ -1,6 +1,6 @@
 # Recipe Viewer Application
 
-An interactive recipe viewer application that helps users follow cooking instructions with features like cooking mode, voice control, and an integrated timer system.
+An interactive recipe viewer application that helps users follow cooking instructions with features like cooking mode and an integrated timer system.
 
 ## Quick Start
 
@@ -11,19 +11,19 @@ An interactive recipe viewer application that helps users follow cooking instruc
 
 2. **Start the Application (Recommended Method):**
    ```bash
-   npm run dev:clean
+   npm run start
    ```
-   This command will automatically kill any processes using ports 3000 and 3001 before starting the application.
+   This command starts only the webpack dev server, which is all you need to run the application.
 
 3. **Alternative Start Methods:**
    ```bash
-   # Only if you're sure the ports are free:
-   npm run dev
+   # Only if you need both servers (not typically required):
+   npm run dev:clean
    
    # If you want to manually check ports first:
-   lsof -i :3000 -i :3001 | grep LISTEN
+   lsof -i :3000 | grep LISTEN
    kill -9 <PID>
-   npm run dev
+   npm run start
    ```
 
 4. **Access the Application:**
@@ -36,7 +36,6 @@ An interactive recipe viewer application that helps users follow cooking instruc
 - Clear, step-by-step instructions
 - High-quality images of the finished dish
 - Serving size adjustments
-- Nutritional information
 
 ### Cooking Mode
 - Distraction-free interface
@@ -44,12 +43,6 @@ An interactive recipe viewer application that helps users follow cooking instruc
 - Step-by-step navigation
 - Progress tracking
 - Keep screen active during cooking
-
-### Voice Control
-- Hands-free navigation through recipe steps
-- Voice commands for timer control
-- Voice-activated ingredient list review
-- Verbal cooking instructions
 
 ### Timer System
 - Multiple concurrent timers
@@ -82,29 +75,62 @@ recipe-viewer/
 │   └── assets/            # Static assets
 │       ├── recipes/       # Recipe JSON files
 │       └── images/        # Image files
-├── server.js              # Express server for API endpoints
+├── server.js              # Express server for static file serving (optional)
 ├── webpack.config.js      # Webpack configuration
 ├── package.json           # Project dependencies
 └── docs/                  # Additional documentation
     └── startup.md         # Detailed startup instructions
 ```
 
-## Server Architecture
+## Application Architecture
 
-The application uses two servers:
-1. **API Server (Port 3001)**: Express server that serves recipe data and static assets
-2. **Webpack Dev Server (Port 3000)**: Serves the bundled frontend with hot reloading
+The Recipe Viewer uses a client-side architecture that loads recipe data directly from JSON files:
 
-Both servers must be running for the application to work properly.
+1. **Static File Serving**: 
+   - All recipe data is stored in JSON files in `src/assets/recipes/`
+   - The main recipe index is in `src/assets/recipes/index.json`
+   - Individual recipe details are in separate JSON files
+
+2. **No API Required**:
+   - The application is designed to work without any backend API
+   - All data is loaded directly from static JSON files
+   - The webpack dev server serves these files directly
+
+3. **Browser Environment Detection**:
+   - The code includes environment detection to work in both development and production
+   - Paths are configured appropriately based on the detected environment
 
 ## Available Scripts
 
-- `npm run dev`: Start both servers simultaneously (recommended for development)
-- `npm run start:api`: Start only the API server
-- `npm run start`: Start only the webpack dev server
+- `npm run start`: Start the webpack dev server (recommended for development)
 - `npm run build`: Create a production build
 - `npm run test`: Run tests
 - `npm run lint`: Lint JavaScript files
+- `npm run deploy`: Deploy to GitHub Pages
+
+## GitHub Pages Deployment
+
+To deploy to GitHub Pages:
+
+1. **Build and Test Locally First**:
+   ```bash
+   npm run build
+   npx serve -s dist
+   ```
+
+2. **Create a Backup Before Deploying**:
+   ```bash
+   mkdir -p backups/$(date +%Y%m%d_%H%M%S)
+   rsync -av --exclude 'node_modules' --exclude 'dist' ./ backups/$(date +%Y%m%d_%H%M%S)/
+   ```
+
+3. **Deploy to GitHub Pages**:
+   ```bash
+   npm run deploy
+   ```
+
+4. **Verify the Deployment**:
+   Check your GitHub Pages URL to ensure everything is working correctly.
 
 ## Troubleshooting
 
@@ -113,29 +139,34 @@ Both servers must be running for the application to work properly.
 1. **"Address already in use" errors**:
    ```
    Error: listen EADDRINUSE: address already in use :::3000
-   Error: listen EADDRINUSE: address already in use :::3001
    ```
    
-   **Solution**: Kill the processes using the ports:
+   **Solution**: Kill the process and restart:
    ```bash
-   lsof -i :3000 -i :3001 | grep LISTEN
+   # Find the process using port 3000
+   lsof -i :3000 | grep LISTEN
+   # Kill the process
    kill -9 <PID>
+   # Start again
+   npm run start
    ```
 
-2. **Missing modules after pulling updates**:
+2. **"window is not defined" errors in server logs**:
+   
+   **Solution**: This is normal when running the server.js file. The application is designed to run in the browser, and some code checks for browser-specific objects. You can ignore these errors or simply use `npm run start` instead of `npm run dev`.
+
+3. **Images not loading**:
+   
+   **Solution**: Check that the image paths in the recipe JSON files match the actual file names in the src/assets/images directory. Image references should use the format:
+   ```json
+   "thumbnail": "images/recipe-name.jpg"
+   ```
+
+4. **Missing modules after pulling updates**:
    
    **Solution**: Reinstall dependencies:
    ```bash
    npm install
-   ```
-
-3. **API server not responding**:
-   
-   **Solution**: Check that both servers are running:
-   ```bash
-   # In separate terminal windows:
-   npm run start:api
-   npm run start
    ```
 
 ## Development Guidelines
