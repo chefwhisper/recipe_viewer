@@ -42,8 +42,23 @@ try {
   console.log('Committing changes');
   execSync('git commit -m "Deploy to GitHub Pages"');
 
-  // Create/update the gh-pages branch with the dist folder
-  console.log(`Pushing to ${ghPagesBranch} branch`);
+  // Check if gh-pages branch exists
+  let branchExists = false;
+  try {
+    execSync('git rev-parse --verify gh-pages');
+    branchExists = true;
+  } catch (error) {
+    branchExists = false;
+  }
+
+  if (branchExists) {
+    // Delete the existing gh-pages branch
+    console.log('Deleting existing gh-pages branch');
+    execSync('git push origin --delete gh-pages');
+  }
+
+  // Create a new gh-pages branch with only the dist content
+  console.log(`Creating new ${ghPagesBranch} branch with dist content`);
   execSync(`git subtree split --prefix dist -b ${ghPagesBranch}`);
   execSync(`git push -f origin ${ghPagesBranch}:${ghPagesBranch}`);
 
