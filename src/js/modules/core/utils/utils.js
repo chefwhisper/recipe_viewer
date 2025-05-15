@@ -8,18 +8,16 @@
  * @returns {string} Formatted time string
  */
 export function formatTime(minutes) {
-    if (!minutes) return '0 minutes';
+    if (!minutes) return 'N/A';
     
     const hours = Math.floor(minutes / 60);
-    const remainingMinutes = minutes % 60;
+    const mins = minutes % 60;
     
-    if (hours && remainingMinutes) {
-        return `${hours} hr ${remainingMinutes} min`;
-    } else if (hours) {
-        return `${hours} hr`;
-    } else {
-        return `${remainingMinutes} min`;
+    if (hours > 0) {
+        return `${hours} hr${hours > 1 ? 's' : ''} ${mins > 0 ? `${mins} min${mins > 1 ? 's' : ''}` : ''}`;
     }
+    
+    return `${mins} min${mins > 1 ? 's' : ''}`;
 }
 
 /**
@@ -72,4 +70,43 @@ export function isEmpty(value) {
     if (Array.isArray(value)) return value.length === 0;
     if (typeof value === 'object') return Object.keys(value).length === 0;
     return false;
+}
+
+/**
+ * Check if we're in a browser environment
+ * @returns {boolean} True if in browser environment
+ */
+export function isBrowserEnvironment() {
+    return typeof window !== 'undefined';
+}
+
+/**
+ * Determine if we're in development or production environment
+ * @returns {string} 'development' or 'production'
+ */
+export function getEnvironment() {
+    const isBrowser = isBrowserEnvironment();
+    
+    const isDevelopment = isBrowser ? 
+        (window.location.hostname === 'localhost' || 
+         window.location.hostname === '127.0.0.1' ||
+         window.location.hostname === '') :
+        true; // Default to development in Node.js environment
+        
+    return isDevelopment ? 'development' : 'production';
+}
+
+/**
+ * Resolve a path based on the current environment
+ * @param {string} path - The path to resolve
+ * @returns {string} The resolved path with appropriate prefix
+ */
+export function resolvePath(path) {
+    const env = getEnvironment();
+    const basePath = env === 'production' ? '/recipe_viewer' : '';
+    
+    // Ensure path starts with a slash
+    const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+    
+    return `${basePath}${normalizedPath}`;
 } 

@@ -65,11 +65,7 @@ module.exports = (env, argv) => {
             from: 'src/assets/images/placeholder.jpg',
             to: 'assets/images/placeholder.jpg',
             priority: 10
-          }
-        ]
-      }),
-      new CopyWebpackPlugin({
-        patterns: [
+          },
           {
             from: 'src/assets/images',
             to: 'assets/images'

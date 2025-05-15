@@ -11,7 +11,7 @@ const ASSET_CONFIG = {
         imagePath: '/assets/images'  // Updated to match server config
     },
     production: {
-        imagePath: '/assets/images'  // Updated to match server config
+        imagePath: '/recipe_viewer/assets/images'  // Updated with repository name prefix
     }
 };
 

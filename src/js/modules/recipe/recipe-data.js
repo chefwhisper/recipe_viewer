@@ -10,8 +10,8 @@ const ASSET_CONFIG = {
         imagePath: '/assets/images'
     },
     production: {
-        recipesPath: '/assets/recipes',
-        imagePath: '/assets/images'
+        recipesPath: '/recipe_viewer/assets/recipes',
+        imagePath: '/recipe_viewer/assets/images'
     }
 };
 
